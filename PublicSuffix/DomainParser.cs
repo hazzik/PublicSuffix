@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -10,12 +11,13 @@ namespace Brandy.PublicSuffix
 {
     public class DomainParser
     {
-        private readonly Rule _default = Rule.Create("*");
-        private readonly IEnumerable<Rule> _rules;
+        internal static readonly IdnMapping IdnMapping = new IdnMapping();
 
-        private DomainParser(IEnumerable<Rule> rules)
+        private readonly Rule _rule;
+
+        private DomainParser(Rule rule)
         {
-            _rules = rules;
+            _rule = rule;
         }
 
         public Domain Parse(string host)
@@ -24,13 +26,18 @@ namespace Brandy.PublicSuffix
                 throw new ArgumentNullException("host");
 
             var labels = host.Split('.');
-            var rules = _rules.Where(r => r.Match(labels))
-                .OrderByDescending(x => x.Length)
-                .ToArray();
 
-            var rule = rules.OfType<ExceptionRule>().FirstOrDefault() ??
-                       rules.FirstOrDefault() ??
-                       _default;
+            if (labels.Any(String.IsNullOrEmpty))
+                throw new ArgumentException("host");
+
+            Array.Reverse(labels);
+
+            return Parse(labels);
+        }
+
+        private Domain Parse(string[] labels)
+        {
+            var rule = _rule.FindMatchingRule(labels);
 
             return rule.Parse(labels);
         }
@@ -41,6 +48,19 @@ namespace Brandy.PublicSuffix
             {
                 return Read(reader);
             }
+        }
+
+        public static Task<DomainParser> FromFileAsync(string fileName)
+        {
+            using (var reader = File.OpenText(fileName))
+            {
+                return ReadAsync(reader);
+            }
+        }
+
+        public static DomainParser Default
+        {
+            get { return FromUrl(new Uri("https://publicsuffix.org/list/effective_tld_names.dat")); }
         }
 
         public static DomainParser FromUrl(Uri uri)
@@ -58,7 +78,7 @@ namespace Brandy.PublicSuffix
             using (var response = await client.GetAsync(uri))
             using (var stream = await response.Content.ReadAsStreamAsync())
             {
-                return FromStream(stream);
+                return await FromStreamAsync(stream);
             }
         }
 
@@ -69,19 +89,81 @@ namespace Brandy.PublicSuffix
                 return Read(reader);
             }
         }
+        
+        public static Task<DomainParser> FromStreamAsync(Stream stream)
+        {
+            using (var reader = new StreamReader(stream))
+            {
+                return ReadAsync(reader);
+            }
+        }
 
         private static DomainParser Read(TextReader reader)
         {
-            var rules = new List<Rule>();
             string line;
+            var lines = new List<string>();
             while ((line = reader.ReadLine()) != null)
             {
                 var l = line.Trim();
                 if (l.Length == 0 || l.StartsWith("//")) continue;
 
-                rules.Add(Rule.Create(l));
+                lines.Add(l);
             }
-            return new DomainParser(rules);
+            
+            return CreateDomainParser(lines);
+        }
+
+        private static async Task<DomainParser> ReadAsync(TextReader reader)
+        {
+            string line;
+            var lines = new List<string>();
+            while ((line = await reader.ReadLineAsync()) != null)
+            {
+                var l = line.Trim();
+                if (l.Length == 0 || l.StartsWith("//")) continue;
+
+                lines.Add(l);
+            }
+
+            return CreateDomainParser(lines);
+        }
+
+        private static DomainParser CreateDomainParser(IEnumerable<string> lines)
+        {
+            return new DomainParser(new Rule(1, ToRuleMap(lines.Select(ParseRuleDefinition), 0)));
+        }
+
+        private static IDictionary<string, Rule> ToRuleMap(IEnumerable<RuleDefinition> rules, int index)
+        {
+            return rules.GroupBy(r => IdnMapping.GetAscii(r.Labels[index]))
+                .ToDictionary(
+                    g => g.Key,
+                    g =>
+                        new Rule(
+                            g.Where(r => r.Labels.Length == index + 1).Select(r => r.Length).SingleOrDefault(),
+                            ToRuleMap(g.Where(r => r.Labels.Length > index + 1), index + 1)),
+                    StringComparer.OrdinalIgnoreCase);
+        }
+
+        private static string[] GetLabels(string name)
+        {
+            var labels = Array.ConvertAll(name.Split('.'), String.Intern);
+            Array.Reverse(labels);
+            return labels;
+        }
+
+        private static RuleDefinition ParseRuleDefinition(string rule)
+        {
+            if (!rule.StartsWith("!"))
+            {
+                var labels = GetLabels(rule);
+                return new RuleDefinition(labels, labels.Length);
+            }
+            else
+            {
+                var labels = GetLabels(rule.Substring(1));
+                return new RuleDefinition(labels, labels.Length - 1);
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ClassLibrary3
+namespace Brandy.PublicSuffix.Test
 {
     public class TestCaseSource
     {

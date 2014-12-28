@@ -46,11 +46,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain.cs" />
-    <Compile Include="DomainRuleParser.cs" />
-    <Compile Include="ExceptionRule.cs" />
     <Compile Include="DomainParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RuleDefinition.cs" />
     <Compile Include="Rule.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PublicSuffix.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

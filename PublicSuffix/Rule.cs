@@ -1,74 +1,66 @@
 using System;
-using System.Globalization;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Brandy.PublicSuffix
 {
-    public class Rule
+    internal class Rule
     {
-        private static readonly IdnMapping IdnMapping = new IdnMapping();
-        private readonly string[] _labels;
-        private readonly DomainRuleParser _parser;
+        private int? _length;
+        private readonly IDictionary<string, Rule> _children;
 
-        protected Rule(string name)
+        public Rule(int? length, IDictionary<string, Rule> children)
         {
-            var labels = name.Split('.');
-            Array.Reverse(labels);
-            _labels = labels;
-            _parser = CreateParser(labels);
+            _length = length;
+            _children = children;
         }
 
-        protected virtual DomainRuleParser CreateParser(string[] labels)
+        private bool TryGetChildren(string label, out Rule entry)
         {
-            return new DomainRuleParser(labels);
-        }
-
-        public int Length
-        {
-            get { return _labels.Length; }
-        }
-
-        public bool Match(string[] labels)
-        {
-            for (var i = 0; i < _labels.Length; i++)
-            {
-                var ruleLabel = _labels[i];
-                if (i == labels.Length)
-                    return false;
-
-                if (ruleLabel != "*")
-                {
-                    var label = labels[labels.Length - 1 - i];
-                    if (!Match(label, ruleLabel))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        private static bool Match(string label, string ruleLabel)
-        {
-            if (string.IsNullOrEmpty(label)) return false;
-            if (string.Equals(ruleLabel, label, StringComparison.OrdinalIgnoreCase)) return true;
-            return string.Equals(IdnMapping.GetAscii(ruleLabel), IdnMapping.GetAscii(label), StringComparison.OrdinalIgnoreCase);
+            return _children.TryGetValue(DomainParser.IdnMapping.GetAscii(label), out entry) ||
+                   _children.TryGetValue("*", out entry);
         }
 
         public Domain Parse(string[] labels)
         {
-            return _parser.ParseDomain(labels);
+            var parseLength = _length.GetValueOrDefault(1);
+            var publicSuffix = GetPublicSuffix(parseLength, labels);
+            var domain = GetRegisterableDomain(parseLength, labels);
+            var subdomain = GetSubdomain(parseLength, labels);
+
+            return new Domain(publicSuffix, domain, subdomain);
         }
 
-        public override string ToString()
+        private static string GetSubdomain(int parseLength, string[] labels)
         {
-            return String.Join(".", _labels);
+            return String.Join(".", labels.Skip(parseLength + 1).Reverse()).ToLower();
         }
 
-        public static Rule Create(string rule)
+        private static string GetPublicSuffix(int parseLength, string[] labels)
         {
-            return !rule.StartsWith("!")
-                ? new Rule(rule)
-                : new ExceptionRule(rule.Substring(1));
+            return String.Join(".", labels.Take(parseLength).Reverse()).ToLower();
+        }
+
+        private static string GetRegisterableDomain(int parseLength, string[] labels)
+        {
+            return labels.Skip(parseLength).Select(x => x.ToLower()).FirstOrDefault();
+        }
+
+        public Rule FindMatchingRule(string[] labels)
+        {
+            var rule = this;
+            foreach (var label in labels)
+            {
+                Rule entry;
+                if (String.IsNullOrEmpty(label))
+                    break;
+
+                if (!rule.TryGetChildren(label, out entry))
+                    break;
+
+                rule = entry;
+            }
+            return rule;
         }
     }
 }

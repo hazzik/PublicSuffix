@@ -1,20 +1,16 @@
-﻿using System.Resources;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+﻿using System.Reflection;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PublicSuffix")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Brandy.PublicSuffix")]
+[assembly: AssemblyDescription("PublicSuffix - Domain Name parser using Mozilla's Public Suffix List (https://publicsuffix.org/)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("PublicSuffix")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyProduct("Brandy.PublicSuffix")]
+[assembly: AssemblyCopyright("Copyright © Brandy Solutions Ltd 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: NeutralResourcesLanguage("en")]
 
 // Version information for an assembly consists of the following four values:
 //
