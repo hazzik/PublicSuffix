@@ -6,4 +6,4 @@ Installation
 ============
 Download the latest release from the [NuGet repository](https://www.nuget.org/packages/Brandy.PublicSuffix/)
 
-Install-Package Brandy.PublicSuffix
+> Install-Package Brandy.PublicSuffix
