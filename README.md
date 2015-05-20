@@ -1,6 +1,6 @@
 PublicSuffix
 ============
-PublicSuffix - Higly optimized Domain Name parser using Mozilla's Public Suffix List (https://publicsuffix.org/)
+PublicSuffix - Highly optimized Domain Name parser using Mozilla's Public Suffix List (https://publicsuffix.org/)
 
 Installation
 ============
