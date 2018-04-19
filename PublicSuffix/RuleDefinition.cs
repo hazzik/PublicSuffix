@@ -1,9 +1,9 @@
 namespace Brandy.PublicSuffix
 {
-    internal class RuleDefinition
+    internal struct RuleDefinition
     {
-        public readonly string[] Labels;
-        public readonly int? Length;
+        public string[] Labels;
+        public int? Length;
 
         public RuleDefinition(string[] labels, int length)
         {

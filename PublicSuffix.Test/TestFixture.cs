@@ -19,7 +19,7 @@ namespace Brandy.PublicSuffix.Test
             Console.WriteLine(sw.ElapsedMilliseconds);
         }
 
-        [TestCaseSource(typeof (TestCaseSource), "Source"), Test]
+        [TestCaseSource(typeof (TestCaseSource), nameof(TestCaseSource.Source)), Test]
         public void Test(string host, string expected)
         {
             Console.WriteLine(host);

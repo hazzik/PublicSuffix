@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 
 namespace Brandy.PublicSuffix
@@ -65,11 +66,15 @@ namespace Brandy.PublicSuffix
 
         public static DomainParser FromUrl(Uri uri)
         {
+#if !NETSTANDARD1_3
             using (var client = new WebClient())
             using (var stream = client.OpenRead(uri))
             {
                 return FromStream(stream);
-            }
+            }  
+#else
+            return Task.Run(() => FromUrlAsync(uri)).GetAwaiter().GetResult();
+#endif
         }
 
         public static async Task<DomainParser> FromUrlAsync(Uri uri)
@@ -147,9 +152,13 @@ namespace Brandy.PublicSuffix
 
         private static string[] GetLabels(string name)
         {
+#if !NETSTANDARD1_3
             var labels = Array.ConvertAll(name.Split('.'), String.Intern);
             Array.Reverse(labels);
             return labels;
+#else
+            return name.Split('.').Reverse().ToArray();
+#endif
         }
 
         private static RuleDefinition ParseRuleDefinition(string rule)

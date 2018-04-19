@@ -51,15 +51,15 @@ namespace Brandy.PublicSuffix
             var rule = this;
             foreach (var label in labels)
             {
-                Rule entry;
                 if (String.IsNullOrEmpty(label))
                     break;
 
-                if (!rule.TryGetChildren(label, out entry))
+                if (!rule.TryGetChildren(label, out var entry))
                     break;
 
                 rule = entry;
             }
+
             return rule;
         }
     }
