@@ -30,7 +30,7 @@ namespace Brandy.PublicSuffix
         public Domain Parse(string host)
         {
             if (host == null)
-                throw new ArgumentNullException("host");
+                throw new ArgumentNullException(nameof(host));
 
             var labels = host.Split('.');
 
@@ -58,11 +58,11 @@ namespace Brandy.PublicSuffix
         }
 
 #if !NET40 && !NET35
-        public static Task<DomainParser> FromFileAsync(string fileName)
+        public static async Task<DomainParser> FromFileAsync(string fileName)
         {
             using (var reader = File.OpenText(fileName))
             {
-                return ReadAsync(reader);
+                return await ReadAsync(reader);
             }
         }
 #endif
@@ -106,11 +106,11 @@ namespace Brandy.PublicSuffix
         }
 
 #if !NET40 && !NET35
-        public static Task<DomainParser> FromStreamAsync(Stream stream)
+        public static async Task<DomainParser> FromStreamAsync(Stream stream)
         {
             using (var reader = new StreamReader(stream))
             {
-                return ReadAsync(reader);
+                return await ReadAsync(reader);
             }
         }
 #endif
