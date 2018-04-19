@@ -4,9 +4,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Runtime.InteropServices.ComTypes;
+
+#if !NET35
 using System.Threading.Tasks;
+#endif
+
+#if !NET40 && !NET35
+using System.Net.Http;
+#endif
 
 namespace Brandy.PublicSuffix
 {
@@ -51,6 +57,7 @@ namespace Brandy.PublicSuffix
             }
         }
 
+#if !NET40 && !NET35
         public static Task<DomainParser> FromFileAsync(string fileName)
         {
             using (var reader = File.OpenText(fileName))
@@ -58,6 +65,7 @@ namespace Brandy.PublicSuffix
                 return ReadAsync(reader);
             }
         }
+#endif
 
         public static DomainParser Default
         {
@@ -77,6 +85,7 @@ namespace Brandy.PublicSuffix
 #endif
         }
 
+#if !NET40 && !NET35
         public static async Task<DomainParser> FromUrlAsync(Uri uri)
         {
             using (var client = new HttpClient())
@@ -86,6 +95,7 @@ namespace Brandy.PublicSuffix
                 return await FromStreamAsync(stream);
             }
         }
+#endif
 
         public static DomainParser FromStream(Stream stream)
         {
@@ -94,7 +104,8 @@ namespace Brandy.PublicSuffix
                 return Read(reader);
             }
         }
-        
+
+#if !NET40 && !NET35
         public static Task<DomainParser> FromStreamAsync(Stream stream)
         {
             using (var reader = new StreamReader(stream))
@@ -102,6 +113,7 @@ namespace Brandy.PublicSuffix
                 return ReadAsync(reader);
             }
         }
+#endif
 
         private static DomainParser Read(TextReader reader)
         {
@@ -118,6 +130,7 @@ namespace Brandy.PublicSuffix
             return CreateDomainParser(lines);
         }
 
+#if !NET40 && !NET35
         private static async Task<DomainParser> ReadAsync(TextReader reader)
         {
             string line;
@@ -132,7 +145,8 @@ namespace Brandy.PublicSuffix
 
             return CreateDomainParser(lines);
         }
-
+#endif
+        
         private static DomainParser CreateDomainParser(IEnumerable<string> lines)
         {
             return new DomainParser(new Rule(1, ToRuleMap(lines.Select(ParseRuleDefinition), 0)));

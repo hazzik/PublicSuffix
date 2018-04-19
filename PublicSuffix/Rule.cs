@@ -33,12 +33,20 @@ namespace Brandy.PublicSuffix
 
         private static string GetSubdomain(int parseLength, string[] labels)
         {
-            return String.Join(".", labels.Skip(parseLength + 1).Reverse()).ToLower();
+            return String.Join(".", labels.Skip(parseLength + 1).Reverse()
+#if NET35
+                    .ToArray()
+#endif
+            ).ToLower();
         }
 
         private static string GetPublicSuffix(int parseLength, string[] labels)
         {
-            return String.Join(".", labels.Take(parseLength).Reverse()).ToLower();
+            return String.Join(".", labels.Take(parseLength).Reverse()
+#if NET35
+                    .ToArray()
+#endif
+            ).ToLower();
         }
 
         private static string GetRegisterableDomain(int parseLength, string[] labels)
