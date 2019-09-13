@@ -2,7 +2,7 @@
   <PropertyGroup>
     <RootNamespace>Brandy.PublicSuffix</RootNamespace>
     <Description>PublicSuffix - Domain Name parser using Mozilla's Public Suffix List (https://publicsuffix.org/)</Description>
-    <Copyright>Copyright © Alexander Zaytsev 2014-2018</Copyright>
+    <Copyright>Copyright © Alexander Zaytsev 2014-2019</Copyright>
     <PackageLicenseUrl>https://github.com/hazzik/PublicSuffix/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/hazzik/PublicSuffix</PackageProjectUrl>
     <PackageTags>public;suffix;public-suffix;domain;parser</PackageTags>
@@ -10,12 +10,15 @@
     <Version>1.1.0</Version>
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
-    <TargetFrameworks>net35;net40;net45;net46;netstandard1.3;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net35;net40;net45;net46;net461;netstandard1.3;netstandard2.0;netcoreapp2.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45'">
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46'">
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461'">
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3'">
