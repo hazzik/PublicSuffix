@@ -10,7 +10,7 @@ namespace Brandy.PublicSuffix
         public Domain(string publicSuffix, string domain, string subdomain)
         {
             PublicSuffix = publicSuffix ?? throw new ArgumentNullException(nameof(publicSuffix));
-            var registrableDomain = string.IsNullOrEmpty(_domain) ? null : domain + "." + publicSuffix;
+            var registrableDomain = string.IsNullOrEmpty(domain) ? null : domain + "." + publicSuffix;
             _domain = domain;
             Subdomain = subdomain;
             RegistrableDomain = registrableDomain;
