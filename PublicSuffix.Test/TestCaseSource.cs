@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿//source https://raw.githubusercontent.com/publicsuffix/list/master/tests/test_psl.txt
+using System.Collections.Generic;
 
 namespace Brandy.PublicSuffix.Test
 {
@@ -8,11 +9,11 @@ namespace Brandy.PublicSuffix.Test
 
         static TestCaseSource()
         {
-            // Any copyright is dedicated to the Public RegisterableDomain.
-            // http://creativecommons.org/publicdomain/zero/1.0/
+            // Any copyright is dedicated to the Public Domain.
+            // https://creativecommons.org/publicdomain/zero/1.0/
 
             // null input.
-            //checkPublicSuffix(null, null);
+            checkPublicSuffix(null, null);
             // Mixed case.
             checkPublicSuffix("COM", null);
             checkPublicSuffix("example.COM", "example.com");
@@ -48,10 +49,10 @@ namespace Brandy.PublicSuffix.Test
             checkPublicSuffix("a.b.example.uk.com", "example.uk.com");
             checkPublicSuffix("test.ac", "test.ac");
             // TLD with only 1 (wildcard) rule.
-            checkPublicSuffix("cy", null);
-            checkPublicSuffix("c.cy", null);
-            checkPublicSuffix("b.c.cy", "b.c.cy");
-            checkPublicSuffix("a.b.c.cy", "b.c.cy");
+            checkPublicSuffix("mm", null);
+            checkPublicSuffix("c.mm", null);
+            checkPublicSuffix("b.c.mm", "b.c.mm");
+            checkPublicSuffix("a.b.c.mm", "b.c.mm");
             // More complex TLD.
             checkPublicSuffix("jp", null);
             checkPublicSuffix("test.jp", "test.jp");
