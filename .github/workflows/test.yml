@@ -1,0 +1,56 @@
+name: test
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ "*" ]
+
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    env:
+      IGNORE_NORMALISATION_GIT_HEAD_MOVE: 1
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # avoid shallow clone
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore
+      run: dotnet restore src
+
+    - name: Test
+      run: dotnet test src --no-restore --collect:"XPlat Code Coverage" --results-directory ./coverage
+
+    - name: Code Coverage Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: coverage/**/coverage.cobertura.xml
+        badge: true
+        fail_below_min: true
+        format: markdown
+        output: both
+        thresholds: '60 80'
+
+    - name: Add Coverage Summary
+      run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        recreate: true
+        path: code-coverage-results.md

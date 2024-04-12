@@ -1,0 +1,42 @@
+name: publish
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ "*" ]
+
+jobs:
+  publish:
+
+    runs-on: ubuntu-latest
+
+    env:
+      IGNORE_NORMALISATION_GIT_HEAD_MOVE: 1
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # avoid shallow clone
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore
+      run: dotnet restore src
+
+    - name: Build
+      run: dotnet build src -c Release --no-restore -p:ContinuousIntegrationBuild=true
+
+    - name: Test
+      run: dotnet test src -c Release --no-build
+
+    - name: Pack
+      run: dotnet pack src -c Release --no-build -o out
+
+    - name: Push
+      if: ${{ env.NUGET_API_KEY != '' }}
+      run: dotnet nuget push *.nupkg -s nuget.org -k $NUGET_API_KEY
+      working-directory: out
