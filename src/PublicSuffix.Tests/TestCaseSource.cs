@@ -114,6 +114,7 @@ namespace Brandy.PublicSuffix.Tests
             get { return source; }
         }
 
+        // ReSharper disable once InconsistentNaming
         private static void checkPublicSuffix(string data, object expected)
         {
             source.Add(new[] {data, expected});

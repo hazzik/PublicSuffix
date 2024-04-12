@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Globalization;
 using NUnit.Framework;
 
 namespace Brandy.PublicSuffix.Tests
@@ -27,11 +26,11 @@ namespace Brandy.PublicSuffix.Tests
             var domain = Parse(host);
             if (domain == null)
             {
-                Assert.AreEqual(null, expected);
+                Assert.That(expected, Is.Null);
             }
             else
             {
-                Assert.AreEqual(expected, domain.RegistrableDomain);
+                Assert.That(domain.RegistrableDomain, Is.EqualTo(expected));
             }
         }
 
@@ -60,7 +59,7 @@ namespace Brandy.PublicSuffix.Tests
             for (int i = 0; i < 1000000; i++)
             {
                 var domain = _parser.Parse("xxx.www.takahama.aichi.jp");
-                Assert.AreEqual("www.takahama.aichi.jp", domain.RegistrableDomain);
+                Assert.That(domain.RegistrableDomain, Is.EqualTo("www.takahama.aichi.jp"));
             }
             sw.Stop();
             Console.WriteLine(sw.ElapsedMilliseconds);
