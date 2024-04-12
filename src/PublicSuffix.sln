@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublicSuffix", "PublicSuffix\PublicSuffix.csproj", "{FC669144-95E3-48F3-8B3C-346225B1D544}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublicSuffix.Test", "PublicSuffix.Test\PublicSuffix.Test.csproj", "{4A4D93B7-8F7F-4D91-AE31-7D9B1E05DACF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublicSuffix.Tests", "PublicSuffix.Tests\PublicSuffix.Tests.csproj", "{4A4D93B7-8F7F-4D91-AE31-7D9B1E05DACF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

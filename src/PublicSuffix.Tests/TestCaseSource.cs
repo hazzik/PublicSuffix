@@ -1,7 +1,7 @@
 ﻿//source https://raw.githubusercontent.com/publicsuffix/list/master/tests/test_psl.txt
 using System.Collections.Generic;
 
-namespace Brandy.PublicSuffix.Test
+namespace Brandy.PublicSuffix.Tests
 {
     public class TestCaseSource
     {

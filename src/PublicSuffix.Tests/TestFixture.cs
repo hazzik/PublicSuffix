@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using NUnit.Framework;
 
-namespace Brandy.PublicSuffix.Test
+namespace Brandy.PublicSuffix.Tests
 {
     [TestFixture]
     public class TestFixture
