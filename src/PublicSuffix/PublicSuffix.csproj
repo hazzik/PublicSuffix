@@ -4,7 +4,7 @@
     <RootNamespace>Brandy.PublicSuffix</RootNamespace>
     <Description>PublicSuffix - Domain Name parser using Mozilla's Public Suffix List (https://publicsuffix.org/)</Description>
     <Copyright>Copyright © Alexander Zaytsev 2014-2019</Copyright>
-    <PackageLicenseUrl>https://github.com/hazzik/PublicSuffix/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/hazzik/PublicSuffix</PackageProjectUrl>
     <PackageTags>public;suffix;public-suffix;domain;parser</PackageTags>
     <TargetFrameworks>net35;net462;netstandard1.3;netstandard2.0;netstandard2.1;net6.0;net8.0</TargetFrameworks>
