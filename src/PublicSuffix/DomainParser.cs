@@ -69,9 +69,14 @@ namespace Brandy.PublicSuffix
 
         public static DomainParser Default
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             get { return FromUrl(new Uri("https://publicsuffix.org/list/effective_tld_names.dat")); }
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
+#if !NET35
+        [Obsolete("Please use FromUrlAsync(Uri) instead")]
+#endif
         public static DomainParser FromUrl(Uri uri)
         {
 #if !NETSTANDARD1_3
