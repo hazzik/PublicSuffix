@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.0;netcoreapp2.0;net45;net46</TargetFrameworks>
+    <TargetFrameworks>net6.0;net8.0;net45;net46</TargetFrameworks>
     <RootNamespace>Brandy.PublicSuffix.Tests</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
