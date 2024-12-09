@@ -26,6 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersion.MsBuild" Version="6.0.5" PrivateAssets="all"/>
+    <PackageReference Include="GitVersion.MsBuild" Version="6.1.0" PrivateAssets="all"/>
   </ItemGroup>
 </Project>
