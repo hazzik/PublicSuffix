@@ -20,7 +20,7 @@ jobs:
       IGNORE_NORMALISATION_GIT_HEAD_MOVE: 1
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 0 # avoid shallow clone
 
